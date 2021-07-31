@@ -1,7 +1,7 @@
 module.exports = {
     rules: {
         /**
-         * 定义了的 jsx element 必须使用
+         * 修复 no-unused-vars 不检查 jsx 的问题
          */
         'react/jsx-uses-vars': 'error'
     }

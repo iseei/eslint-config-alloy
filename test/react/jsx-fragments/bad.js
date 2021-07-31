@@ -1,1 +1,1 @@
-let foo = <React.Fragment></React.Fragment>;
+<React.Fragment></React.Fragment>;

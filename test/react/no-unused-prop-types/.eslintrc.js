@@ -2,8 +2,7 @@ module.exports = {
     rules: {
         /**
          * 禁止出现未使用的 propTypes
-         * @category React
-         * @reason 不强制要求写 propTypes
+         * @reason 类型相关的约束交给 TypeScript
          */
         'react/no-unused-prop-types': 'off'
     }

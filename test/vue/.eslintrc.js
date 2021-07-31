@@ -1,5 +1,5 @@
 module.exports = {
-    extends: ['../../base.js'],
+    extends: ['../base/.eslintrc.js'],
     parser: 'vue-eslint-parser',
     parserOptions: {
         // 设置 js 的解析器为 babel-eslint

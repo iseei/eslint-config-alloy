@@ -1,9 +1,8 @@
 module.exports = {
     rules: {
         /**
-         * 禁止手动 export default
-         * @category Uncategorized
+         * 必须直接使用 export default 导出组件
          */
-        'vue/require-direct-export': 'error'
+        'vue/require-direct-export': 'off'
     }
 };

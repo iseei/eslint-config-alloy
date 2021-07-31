@@ -1,8 +1,7 @@
 module.exports = {
     rules: {
         /**
-         * 禁用 v-html
-         * @category Minimizing Arbitrary Choices and Cognitive Overhead
+         * 禁止使用 v-html
          */
         'vue/no-v-html': 'off'
     }

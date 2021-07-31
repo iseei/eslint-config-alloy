@@ -1,10 +1,7 @@
 module.exports = {
     rules: {
         /**
-         * 可以简写为函数类型的接口或字面类似，必须简写
-         * @category TypeScript
-         * @reason reason
-         * @fixable
+         * 使用函数类型别名替代包含函数调用声明的接口
          */
         '@typescript-eslint/prefer-function-type': 'error'
     }

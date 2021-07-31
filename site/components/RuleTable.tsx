@@ -1,48 +1,37 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+import React from 'react';
 
-import * as React from 'react';
-
-import { Rule, RuleNamespaces, RuleNamespacePrismLanguageMap } from '../constants/rule';
-import { parseDescription } from '../utils';
+import { NAMESPACE_CONFIG, Namespace, Rule } from '../../config';
+import { parseDescription, t } from '../utils';
 
 interface RuleTableProps {
-    namespace: RuleNamespaces;
-    shouldHideOff: boolean;
+    namespace: Namespace;
+    hideOff: boolean;
 }
 
-const configMap: {
-    [key in RuleNamespaces]: {
-        [key: string]: Rule;
-    }
-} = {
-    index: require('../config/index.json'),
-    react: require('../config/react.json'),
-    vue: require('../config/vue.json'),
-    typescript: require('../config/typescript.json')
-};
-
-export const RuleTable: React.SFC<RuleTableProps> = ({ namespace, shouldHideOff }) => {
-    const currentConfig = configMap[namespace];
+export const RuleTable: React.SFC<RuleTableProps> = ({ namespace, hideOff }) => {
     return (
         <div className="container-fluid">
             <div className="flex-left flex-wrap units-gap hide-on-mobile">
-                <h3 className="unit-1-3 unit-1-on-mobile site-table-header-text">规则说明</h3>
+                <h3 className="unit-1-3 unit-1-on-mobile site-table-header-text">
+                    {t('规则说明')}
+                </h3>
                 <h3 className="unit-1-3 unit-1-on-mobile text-danger site-table-header-text">
-                    错误的示例
+                    {t('错误的示例')}
                 </h3>
                 <h3 className="unit-1-3 unit-1-on-mobile text-success site-table-header-text">
-                    正确的示例
+                    {t('正确的示例')}
                 </h3>
             </div>
-            {Object.values(currentConfig).map(
+            {Object.values<Rule>(NAMESPACE_CONFIG[namespace].ruleConfig).map(
                 ({ name, value, description, reason, badExample, goodExample }) => (
                     <div
+                        id={name}
                         key={name}
                         className={`flex-left flex-wrap top-gap-big units-gap site-row ${
                             value === 'off' ? 'site-row-off site-row-wide' : ''
                         }`}
                         style={
-                            value === 'off' && shouldHideOff
+                            value === 'off' && hideOff
                                 ? {
                                       display: 'none'
                                   }
@@ -50,11 +39,14 @@ export const RuleTable: React.SFC<RuleTableProps> = ({ namespace, shouldHideOff 
                         }
                     >
                         <div className="unit-1-3 unit-1-on-mobile site-desc">
-                            <a href={`https://eslint.org/docs/rules/${name}/`}>{name}</a>
+                            <a href={NAMESPACE_CONFIG[namespace].getDocsUrl(name)}>{name}</a>
+                            <a className="site-anchor" href={`#${name}`}>
+                                #
+                            </a>
                             <p
                                 className="top-gap-0"
                                 dangerouslySetInnerHTML={{
-                                    __html: parseDescription(description)
+                                    __html: parseDescription(t(description))
                                 }}
                             />
                             {reason && (
@@ -66,13 +58,27 @@ export const RuleTable: React.SFC<RuleTableProps> = ({ namespace, shouldHideOff 
                                     }}
                                 />
                             )}
+                            {Array.isArray(value) && (
+                                <div className="text-muted text-small site-rule-value">
+                                    {t('配置：')}
+                                    {typeof value[1] === 'object' ? (
+                                        <pre>
+                                            <code>{`["error", ${JSON.stringify(
+                                                value[1],
+                                                null,
+                                                4
+                                            )}]`}</code>
+                                        </pre>
+                                    ) : (
+                                        <code>{`["error", ${JSON.stringify(value[1])}]`}</code>
+                                    )}
+                                </div>
+                            )}
                         </div>
                         <div className="unit-1-3 unit-1-on-mobile">
                             {badExample && (
                                 <pre
-                                    className={`language-${
-                                        RuleNamespacePrismLanguageMap[namespace]
-                                    } site-code`}
+                                    className={`language-${NAMESPACE_CONFIG[namespace].prismLanguage} site-code`}
                                 >
                                     <code
                                         dangerouslySetInnerHTML={{
@@ -85,9 +91,7 @@ export const RuleTable: React.SFC<RuleTableProps> = ({ namespace, shouldHideOff 
                         <div className="unit-1-3 unit-1-on-mobile">
                             {goodExample && (
                                 <pre
-                                    className={`language-${
-                                        RuleNamespacePrismLanguageMap[namespace]
-                                    }  site-code`}
+                                    className={`language-${NAMESPACE_CONFIG[namespace].prismLanguage}  site-code`}
                                 >
                                     <code
                                         dangerouslySetInnerHTML={{
